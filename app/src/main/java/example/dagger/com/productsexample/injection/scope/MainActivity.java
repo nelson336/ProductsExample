@@ -1,4 +1,4 @@
-package example.dagger.com.productsexample.scope;
+package example.dagger.com.productsexample.injection.scope;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -1,12 +1,12 @@
-package example.dagger.com.productsexample.module;
+package example.dagger.com.productsexample.injection.module;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import dagger.Module;
 import dagger.Provides;
+import example.dagger.com.productsexample.injection.scope.MainActivity;
 import example.dagger.com.productsexample.modell.Product;
-import example.dagger.com.productsexample.scope.MainActivity;
 
 /**
  * Created by nelson336 on 29/07/16.
@@ -32,8 +32,8 @@ public class ProductModule {
     @Provides
     public Product provideProduct() {
 
-        if(mProduct == null){
-            mProduct= new Product();
+        if (mProduct == null) {
+            mProduct = new Product();
         }
 
         return mProduct;
@@ -41,13 +41,14 @@ public class ProductModule {
 
     @MainActivity
     @Provides
-    public  List<Product>  provideProducts() {
+    public List<Product> provideProducts() {
 
-        if(mProducts ==null){
+        if (mProducts == null) {
             mProducts = new ArrayList<Product>();
         }
 
         return mProducts;
     }
+
 
 }

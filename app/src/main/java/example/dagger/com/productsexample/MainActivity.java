@@ -1,7 +1,6 @@
 package example.dagger.com.productsexample;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
@@ -11,12 +10,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import butterknife.ButterKnife;
-import example.dagger.com.productsexample.component.DaggerProductComponent;
-import example.dagger.com.productsexample.component.ProductComponent;
+import example.dagger.com.productsexample.injection.component.DaggerProductComponent;
+import example.dagger.com.productsexample.injection.component.ProductComponent;
 import example.dagger.com.productsexample.fragments.MainFragment;
 import example.dagger.com.productsexample.modell.Product;
-import example.dagger.com.productsexample.module.ProductModule;
+import example.dagger.com.productsexample.injection.module.ProductModule;
 import example.dagger.com.productsexample.utils.Utils;
 
 public class MainActivity extends AppCompatActivity {
@@ -42,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
             MainFragment fragment = MainFragment.newInstance();
 
-            component.inject(fragment);
+            fragment.injectProducts(component);
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager

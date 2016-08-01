@@ -2,25 +2,23 @@ package example.dagger.com.productsexample.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import javax.inject.Inject;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import example.dagger.com.productsexample.MainActivity;
 import example.dagger.com.productsexample.R;
+import example.dagger.com.productsexample.injection.component.ProductComponent;
+import example.dagger.com.productsexample.injection.injections.product.ProductInject;
 import example.dagger.com.productsexample.modell.Product;
 
 /**
  * Created by nelson336 on 26/07/16.
  */
-public class ProductDetailsFragment extends Fragment {
+public class ProductDetailsFragment extends Fragment  {
 
     @Bind(R.id.tvCod) TextView tvCod;
     @Bind(R.id.tvDesc) TextView tvDesc;
@@ -34,7 +32,7 @@ public class ProductDetailsFragment extends Fragment {
         return fragment;
     }
 
-    @Inject Product mProduct;
+    private Product mProduct;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,7 +64,9 @@ public class ProductDetailsFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
-    @Inject
-    public ProductDetailsFragment() {
+    public void injectProduct(ProductComponent component) {
+        ProductInject inject = new ProductInject();
+        component.inject(inject);
+        ProductDetailsFragment.this.mProduct = inject.getProduct();
     }
 }

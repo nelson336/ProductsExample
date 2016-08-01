@@ -14,29 +14,27 @@ import android.widget.LinearLayout;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import example.dagger.com.productsexample.MainActivity;
 import example.dagger.com.productsexample.R;
 import example.dagger.com.productsexample.adapter.ProductAdapter;
-import example.dagger.com.productsexample.component.DaggerProductComponent;
-import example.dagger.com.productsexample.component.ProductComponent;
+import example.dagger.com.productsexample.injection.component.DaggerProductComponent;
+import example.dagger.com.productsexample.injection.component.ProductComponent;
+import example.dagger.com.productsexample.injection.injections.product.ProductInject;
+import example.dagger.com.productsexample.injection.module.ProductModule;
 import example.dagger.com.productsexample.modell.Product;
-import example.dagger.com.productsexample.module.ProductModule;
 
 /**
  * Created by nelson336 on 28/07/16.
  */
-public class MainFragment extends Fragment {
-
+public class MainFragment extends  Fragment  {
 
     @Bind(R.id.rvProducts) RecyclerView rvProducts;
     @Bind(R.id.llFragmentContent) LinearLayout llFragmentContent;
 
     private MainActivity mActivity;
-    @Inject List<Product> mProducts;
+    private List<Product> mProducts;
 
     @Override
     public void onAttach(Context context) {
@@ -77,7 +75,7 @@ public class MainFragment extends Fragment {
                         .build();
 
                 ProductDetailsFragment fragment = ProductDetailsFragment.newInstance();
-                component.inject(fragment);
+                fragment.injectProduct(component);
 
                 FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
                 fragmentManager
@@ -95,5 +93,11 @@ public class MainFragment extends Fragment {
     @Override public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+    }
+
+    public void injectProducts(ProductComponent component) {
+        ProductInject inject = new ProductInject();
+        component.inject(inject);
+        MainFragment.this.mProducts = inject.getProducts();
     }
 }
