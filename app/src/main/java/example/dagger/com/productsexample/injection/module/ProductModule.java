@@ -1,20 +1,27 @@
 package example.dagger.com.productsexample.injection.module;
 
+import android.os.Bundle;
+
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import dagger.Module;
 import dagger.Provides;
-import example.dagger.com.productsexample.injection.scope.MainActivity;
+import example.dagger.com.productsexample.injection.scope.ActivityScope;
 import example.dagger.com.productsexample.modell.Product;
 
 /**
  * Created by nelson336 on 29/07/16.
  */
 
-@MainActivity
+@ActivityScope
 @Module
 public class ProductModule {
+
+    public static final String PRODUCTS_INJECT = "products_inject";
+    public static final String PRODUCT_INJECT = "product_inject";
 
     private List<Product> mProducts;
 
@@ -28,27 +35,32 @@ public class ProductModule {
         this.mProduct = product;
     }
 
-    @MainActivity
+    @ActivityScope
     @Provides
     public Product provideProduct() {
-
-        if (mProduct == null) {
-            mProduct = new Product();
-        }
-
         return mProduct;
     }
 
-    @MainActivity
+    @ActivityScope
     @Provides
     public List<Product> provideProducts() {
-
-        if (mProducts == null) {
-            mProducts = new ArrayList<Product>();
-        }
 
         return mProducts;
     }
 
+    @ActivityScope
+    @Provides
+    public Bundle provideSave() {
+        final Bundle save = new Bundle();
+        if(mProduct != null){
+            save.putString(PRODUCT_INJECT, new Gson().toJson(mProduct));
+        }
+
+        if(mProducts != null){
+            save.putString(PRODUCTS_INJECT, new Gson().toJson(mProducts));
+        }
+
+        return save;
+    }
 
 }

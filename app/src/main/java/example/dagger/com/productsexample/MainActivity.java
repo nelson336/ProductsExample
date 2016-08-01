@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
             MainFragment fragment = MainFragment.newInstance();
 
-            fragment.injectProducts(component);
+            component.inject(fragment);
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager

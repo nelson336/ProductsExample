@@ -2,23 +2,25 @@ package example.dagger.com.productsexample.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import example.dagger.com.productsexample.MainActivity;
 import example.dagger.com.productsexample.R;
-import example.dagger.com.productsexample.injection.component.ProductComponent;
-import example.dagger.com.productsexample.injection.injections.product.ProductInject;
+import example.dagger.com.productsexample.injection.injections.FragmentInject;
+import example.dagger.com.productsexample.injection.module.ProductModule;
 import example.dagger.com.productsexample.modell.Product;
 
 /**
  * Created by nelson336 on 26/07/16.
  */
-public class ProductDetailsFragment extends Fragment  {
+public class ProductDetailsFragment extends FragmentInject {
 
     @Bind(R.id.tvCod) TextView tvCod;
     @Bind(R.id.tvDesc) TextView tvDesc;
@@ -37,6 +39,7 @@ public class ProductDetailsFragment extends Fragment  {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mProduct = new Gson().fromJson(getSave().getString(ProductModule.PRODUCT_INJECT), Product.class);
     }
 
     @Nullable
@@ -64,9 +67,4 @@ public class ProductDetailsFragment extends Fragment  {
         ButterKnife.unbind(this);
     }
 
-    public void injectProduct(ProductComponent component) {
-        ProductInject inject = new ProductInject();
-        component.inject(inject);
-        ProductDetailsFragment.this.mProduct = inject.getProduct();
-    }
 }

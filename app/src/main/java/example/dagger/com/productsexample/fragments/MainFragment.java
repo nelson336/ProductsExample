@@ -12,6 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
@@ -21,14 +25,14 @@ import example.dagger.com.productsexample.R;
 import example.dagger.com.productsexample.adapter.ProductAdapter;
 import example.dagger.com.productsexample.injection.component.DaggerProductComponent;
 import example.dagger.com.productsexample.injection.component.ProductComponent;
-import example.dagger.com.productsexample.injection.injections.product.ProductInject;
+import example.dagger.com.productsexample.injection.injections.FragmentInject;
 import example.dagger.com.productsexample.injection.module.ProductModule;
 import example.dagger.com.productsexample.modell.Product;
 
 /**
  * Created by nelson336 on 28/07/16.
  */
-public class MainFragment extends  Fragment  {
+public class MainFragment extends FragmentInject {
 
     @Bind(R.id.rvProducts) RecyclerView rvProducts;
     @Bind(R.id.llFragmentContent) LinearLayout llFragmentContent;
@@ -61,6 +65,13 @@ public class MainFragment extends  Fragment  {
         return view;
     }
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+           mProducts = new ArrayList<Product>(Arrays.asList(new Gson().fromJson(getSave().getString(ProductModule.PRODUCTS_INJECT), Product[].class)));
+    }
+
     private void initComponents() {
         rvProducts.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         rvProducts.setHasFixedSize(true);
@@ -75,7 +86,7 @@ public class MainFragment extends  Fragment  {
                         .build();
 
                 ProductDetailsFragment fragment = ProductDetailsFragment.newInstance();
-                fragment.injectProduct(component);
+                component.inject(fragment);
 
                 FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
                 fragmentManager
@@ -95,9 +106,8 @@ public class MainFragment extends  Fragment  {
         ButterKnife.unbind(this);
     }
 
-    public void injectProducts(ProductComponent component) {
-        ProductInject inject = new ProductInject();
-        component.inject(inject);
-        MainFragment.this.mProducts = inject.getProducts();
-    }
+
+
+
+
 }
