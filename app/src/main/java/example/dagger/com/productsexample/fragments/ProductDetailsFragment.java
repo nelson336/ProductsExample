@@ -2,25 +2,25 @@ package example.dagger.com.productsexample.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import example.dagger.com.productsexample.MainActivity;
 import example.dagger.com.productsexample.R;
-import example.dagger.com.productsexample.injection.injections.FragmentInject;
+import example.dagger.com.productsexample.injection.component.ProductComponent;
+import example.dagger.com.productsexample.injection.injections.GenericInject;
+import example.dagger.com.productsexample.injection.injections.GenericObjectInject;
 import example.dagger.com.productsexample.injection.module.ProductModule;
 import example.dagger.com.productsexample.modell.Product;
 
 /**
  * Created by nelson336 on 26/07/16.
  */
-public class ProductDetailsFragment extends FragmentInject {
+public class ProductDetailsFragment extends Fragment {
 
     @Bind(R.id.tvCod) TextView tvCod;
     @Bind(R.id.tvDesc) TextView tvDesc;
@@ -35,12 +35,6 @@ public class ProductDetailsFragment extends FragmentInject {
     }
 
     private Product mProduct;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mProduct = new Gson().fromJson(getSave().getString(ProductModule.PRODUCT_INJECT), Product.class);
-    }
 
     @Nullable
     @Override
@@ -66,5 +60,13 @@ public class ProductDetailsFragment extends FragmentInject {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
+
+    public void inject(ProductComponent dagger){
+        GenericInject inject = new GenericInject();
+        dagger.inject(inject);
+        GenericObjectInject objectInject = inject.getInject().get(ProductModule.PRODUCT_INJECT);
+        mProduct = GenericObjectInject.parse(objectInject);
+    }
+
 
 }

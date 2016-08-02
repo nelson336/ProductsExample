@@ -10,9 +10,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import example.dagger.com.productsexample.injection.component.ClientComponent;
+import example.dagger.com.productsexample.injection.component.DaggerClientComponent;
 import example.dagger.com.productsexample.injection.component.DaggerProductComponent;
 import example.dagger.com.productsexample.injection.component.ProductComponent;
 import example.dagger.com.productsexample.fragments.MainFragment;
+import example.dagger.com.productsexample.injection.module.ClientModule;
+import example.dagger.com.productsexample.modell.Client;
 import example.dagger.com.productsexample.modell.Product;
 import example.dagger.com.productsexample.injection.module.ProductModule;
 import example.dagger.com.productsexample.utils.Utils;
@@ -23,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String PRODUCT_DETAILS_FRAGMENT_TAG = "product_details_fragment_tag";
 
     private List<Product> mProducts;
+    private Client mClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,15 +37,22 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
 
             mProducts = new ArrayList<Product>(Arrays.asList(new Gson().fromJson(Utils.loadJSONFromAsset(MainActivity.this, "jsons/products.json"), Product[].class)));
+            mClient = new Gson().fromJson(Utils.loadJSONFromAsset(MainActivity.this, "jsons/client.json"), Client.class);
+            MainFragment fragment = MainFragment.newInstance();
 
-            ProductComponent component = DaggerProductComponent
+            ProductComponent productComponent = DaggerProductComponent
                     .builder()
                     .productModule(new ProductModule(mProducts))
                     .build();
 
-            MainFragment fragment = MainFragment.newInstance();
 
-            component.inject(fragment);
+            ClientComponent clientComponent = DaggerClientComponent
+                    .builder()
+                    .clientModule(new ClientModule(mClient))
+                    .build();
+
+            fragment.inject(clientComponent);
+            fragment.inject(productComponent);
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager

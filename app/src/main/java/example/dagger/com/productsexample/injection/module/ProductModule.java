@@ -1,14 +1,12 @@
 package example.dagger.com.productsexample.injection.module;
 
-import android.os.Bundle;
-
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import dagger.Module;
 import dagger.Provides;
+import example.dagger.com.productsexample.injection.injections.GenericObjectInject;
 import example.dagger.com.productsexample.injection.scope.ActivityScope;
 import example.dagger.com.productsexample.modell.Product;
 
@@ -35,32 +33,33 @@ public class ProductModule {
         this.mProduct = product;
     }
 
-    @ActivityScope
     @Provides
     public Product provideProduct() {
         return mProduct;
     }
 
-    @ActivityScope
     @Provides
     public List<Product> provideProducts() {
 
         return mProducts;
     }
 
-    @ActivityScope
     @Provides
-    public Bundle provideSave() {
-        final Bundle save = new Bundle();
+    public Map<String, GenericObjectInject> provideSave() {
+        final  Map<String, GenericObjectInject> map = new HashMap<String, GenericObjectInject>();
         if(mProduct != null){
-            save.putString(PRODUCT_INJECT, new Gson().toJson(mProduct));
+            GenericObjectInject<Product> productInject = new GenericObjectInject<Product>();
+            productInject.set(mProduct);
+            map.put(PRODUCT_INJECT, productInject);
         }
 
         if(mProducts != null){
-            save.putString(PRODUCTS_INJECT, new Gson().toJson(mProducts));
+            GenericObjectInject<List<Product>> productsInject = new GenericObjectInject<List<Product>>();
+            productsInject.set(mProducts);
+            map.put(PRODUCTS_INJECT, productsInject);
         }
 
-        return save;
+        return map;
     }
 
 }
