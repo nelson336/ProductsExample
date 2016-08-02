@@ -13,6 +13,7 @@ public class GenericObjectInject<T>  {
     public T get(){
         return mT;
     }
+
     public  static  <Y> Y parse(GenericObjectInject inject){
         try{
             return ((Y) inject.get());

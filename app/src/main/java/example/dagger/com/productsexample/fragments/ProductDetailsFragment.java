@@ -68,5 +68,4 @@ public class ProductDetailsFragment extends Fragment {
         mProduct = GenericObjectInject.parse(objectInject);
     }
 
-
 }

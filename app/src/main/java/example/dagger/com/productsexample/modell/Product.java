@@ -4,6 +4,7 @@ package example.dagger.com.productsexample.modell;
  * Created by nelson336 on 26/07/16.
  */
 public class Product {
+
     private String id;
     private String desc;
 

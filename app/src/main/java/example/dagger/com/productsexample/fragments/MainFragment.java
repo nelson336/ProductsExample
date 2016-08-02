@@ -59,7 +59,6 @@ public class MainFragment extends Fragment {
         return fragment;
     }
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -68,7 +67,6 @@ public class MainFragment extends Fragment {
         initComponents();
         return view;
     }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,7 +79,6 @@ public class MainFragment extends Fragment {
             tvClientCPF.setText(mClient.getCpf());
             tvClientName.setText(mClient.getName());
         }
-
 
         rvProducts.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         rvProducts.setHasFixedSize(true);
