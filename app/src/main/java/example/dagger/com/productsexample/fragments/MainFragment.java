@@ -44,19 +44,34 @@ public class MainFragment extends Fragment {
     private List<Product> mProducts;
     private Client mClient;
 
+    private GenericInject mProductInject;
+    private GenericInject mClientInject;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mActivity = (MainActivity) context;
     }
 
+    public GenericInject getProductInject() {
+
+        if(mProductInject == null){
+            mProductInject = new GenericInject();
+        }
+
+        return mProductInject;
+    }
+
+    public GenericInject getClientInject() {
+        if(mClientInject == null){
+            mClientInject = new GenericInject();
+        }
+
+        return mClientInject;
+    }
+
     public static MainFragment newInstance() {
-
-        Bundle args = new Bundle();
-
-        MainFragment fragment = new MainFragment();
-        fragment.setArguments(args);
-        return fragment;
+        return new MainFragment();
     }
 
     @Nullable
@@ -71,11 +86,20 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (mClientInject != null && mClientInject.getInject() != null) {
+            final GenericObjectInject objectInject = mClientInject.getInject().get(ClientModule.CLIENT_INJECT);
+            mClient = GenericObjectInject.parse(objectInject);
+        }
+
+        if (mProductInject != null && mProductInject.getInject() != null) {
+            final GenericObjectInject objectInject = mProductInject.getInject().get(ProductModule.PRODUCTS_INJECT);
+            mProducts = GenericObjectInject.parse(objectInject);
+        }
     }
 
     private void initComponents() {
 
-        if (mClient != null){
+        if (mClient != null) {
             tvClientCPF.setText(mClient.getCpf());
             tvClientName.setText(mClient.getName());
         }
@@ -93,7 +117,7 @@ public class MainFragment extends Fragment {
                         .build();
 
                 ProductDetailsFragment fragment = ProductDetailsFragment.newInstance();
-                fragment.inject(component);
+                 component.inject(fragment.getProductInject());
 
                 FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
                 fragmentManager
@@ -108,23 +132,10 @@ public class MainFragment extends Fragment {
         rvProducts.setAdapter(adapter);
     }
 
-    @Override public void onDestroyView() {
+    @Override
+    public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-    }
-
-    public void inject(ProductComponent dagger){
-        GenericInject inject = new GenericInject();
-        dagger.inject(inject);
-        GenericObjectInject objectInject = inject.getInject().get(ProductModule.PRODUCTS_INJECT);
-        mProducts = GenericObjectInject.parse(objectInject);
-    }
-
-    public void inject(ClientComponent dagger){
-        GenericInject inject = new GenericInject();
-        dagger.inject(inject);
-        GenericObjectInject objectInject = inject.getInject().get(ClientModule.CLIENT_INJECT);
-        mClient = GenericObjectInject.parse(objectInject);
     }
 
 }

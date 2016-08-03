@@ -25,16 +25,31 @@ public class ProductDetailsFragment extends Fragment {
     @Bind(R.id.tvCod) TextView tvCod;
     @Bind(R.id.tvDesc) TextView tvDesc;
 
+    private GenericInject mProductInject;
+
+    public GenericInject getProductInject() {
+
+        if(mProductInject == null){
+            mProductInject = new GenericInject();
+        }
+
+        return mProductInject;
+    }
+
     public static ProductDetailsFragment newInstance() {
-
-        Bundle args = new Bundle();
-
-        ProductDetailsFragment fragment = new ProductDetailsFragment();
-        fragment.setArguments(args);
-        return fragment;
+        return new ProductDetailsFragment();
     }
 
     private Product mProduct;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (mProductInject != null && mProductInject.getInject() != null) {
+            final GenericObjectInject objectInject = mProductInject.getInject().get(ProductModule.PRODUCT_INJECT);
+            mProduct = GenericObjectInject.parse(objectInject);
+        }
+    }
 
     @Nullable
     @Override
@@ -46,10 +61,10 @@ public class ProductDetailsFragment extends Fragment {
     }
 
     private void initComponents() {
-        if(mProduct == null){
+        if (mProduct == null) {
             tvCod.setText("0");
             tvDesc.setText("NULO");
-        }else {
+        } else {
             tvCod.setText(mProduct.getId());
             tvDesc.setText(mProduct.getDesc());
         }
@@ -59,13 +74,6 @@ public class ProductDetailsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-    }
-
-    public void inject(ProductComponent dagger){
-        GenericInject inject = new GenericInject();
-        dagger.inject(inject);
-        GenericObjectInject objectInject = inject.getInject().get(ProductModule.PRODUCT_INJECT);
-        mProduct = GenericObjectInject.parse(objectInject);
     }
 
 }

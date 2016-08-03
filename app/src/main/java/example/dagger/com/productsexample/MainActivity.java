@@ -15,6 +15,7 @@ import example.dagger.com.productsexample.injection.component.DaggerClientCompon
 import example.dagger.com.productsexample.injection.component.DaggerProductComponent;
 import example.dagger.com.productsexample.injection.component.ProductComponent;
 import example.dagger.com.productsexample.fragments.MainFragment;
+import example.dagger.com.productsexample.injection.injections.GenericInject;
 import example.dagger.com.productsexample.injection.module.ClientModule;
 import example.dagger.com.productsexample.modell.Client;
 import example.dagger.com.productsexample.modell.Product;
@@ -38,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
 
             mProducts = new ArrayList<Product>(Arrays.asList(new Gson().fromJson(Utils.loadJSONFromAsset(MainActivity.this, "jsons/products.json"), Product[].class)));
             mClient = new Gson().fromJson(Utils.loadJSONFromAsset(MainActivity.this, "jsons/client.json"), Client.class);
-            MainFragment fragment = MainFragment.newInstance();
 
             ProductComponent productComponent = DaggerProductComponent
                     .builder()
@@ -51,8 +51,10 @@ public class MainActivity extends AppCompatActivity {
                     .clientModule(new ClientModule(mClient))
                     .build();
 
-            fragment.inject(clientComponent);
-            fragment.inject(productComponent);
+            MainFragment fragment = MainFragment.newInstance();
+
+            clientComponent.inject(fragment.getClientInject());
+            productComponent.inject(fragment.getProductInject());
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager
